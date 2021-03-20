@@ -5,7 +5,7 @@ import {
     TextInput,
     FlatList
 } from 'react-native';
-import styles from './style'
+import styles from './style';
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Mapmyindia from 'mapmyindia-restapi-react-native-beta';
@@ -21,16 +21,18 @@ const DestinationSearch = () => {
     const [suggestedData, setsuggestedData] = useState([])
     const [destinationtext, setDestinationText] = useState('')
     const onchnagetextcalled = (query) => {
-        console.log(query)
         if (query) {
-            console.log('inside if condition');
             Mapmyindia.atlas_auto({ query: query }, (response) => {
-                console.log(response)
                 if (response.suggestedLocations) {
                     setsuggestedData(response.suggestedLocations)
                 }
-
+                else{
+                    setsuggestedData([])
+                }
             });
+        }
+        else{
+            setsuggestedData([])
         }
     }
     const renderItem = (item) => {
@@ -46,8 +48,7 @@ const DestinationSearch = () => {
             <TextInput
                 style={styles.textinputbox}
                 placeholder='from'
-                value={fromtext}
-                onChangeText={(text) => { setFromText(text) }}
+                onChangeText={(text) => { onchnagetextcalled(text) }}
             />
             <TextInput
                 style={styles.textinputbox}
@@ -57,6 +58,7 @@ const DestinationSearch = () => {
             <FlatList
                 data={suggestedData}
                 renderItem={renderItem}
+
                 keyExtractor={(item, index) => String(index)}
             />
         </View>
